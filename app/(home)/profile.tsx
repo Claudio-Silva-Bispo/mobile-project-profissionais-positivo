@@ -1,23 +1,24 @@
-import { useAuth, useUser } from '@clerk/clerk-expo';
+import { useAuth, useClerk, useUser } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Alert,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function ProfileScreen() {
   const { user } = useUser();
   const { signOut } = useAuth();
+  const { signOut: clerkSignOut } = useClerk();
   const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -45,8 +46,8 @@ export default function ProfileScreen() {
 
   const handleSignOut = async () => {
     try {
-      await signOut();
-      router.replace('/sign-in');
+      await clerkSignOut();
+      router.replace('/(auth)/sign-in');
     } catch (err: any) {
       Alert.alert('Erro', err.errors?.[0]?.message || 'Falha ao sair');
     }
@@ -192,8 +193,8 @@ const styles = StyleSheet.create({
     color: '#333',
   },
    backButton: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 20,          
     backgroundColor: '#001F3F',  
     justifyContent: 'center',
@@ -267,6 +268,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#fff'
   },
   editButton: {
     backgroundColor: '#007AFF',
